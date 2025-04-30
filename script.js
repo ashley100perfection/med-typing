@@ -97,5 +97,52 @@ function showTab(tab) {
     .classList.add("active");
 }
 
+let timer = null;
+let timeLeft = 30;
+
+function startTimer() {
+  timeLeft = 30;
+  document.getElementById("timer").textContent = `Time: ${timeLeft}s`;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").textContent = `Time: ${timeLeft}s`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      typingArea.disabled = true;
+      calculateFinalStats();
+    }
+  }, 1000);
+}
+
+function calculateFinalStats() {
+  const typed = typingArea.value;
+  let correct = 0;
+
+  for (let i = 0; i < typed.length && i < currentPhrase.length; i++) {
+    if (typed[i] === currentPhrase[i]) {
+      correct++;
+    }
+  }
+
+  const words = typed.trim().split(/\s+/).length;
+  const wpm = Math.round(words * 2); // since it's 30s test
+  const accuracy = Math.round((correct / typed.length) * 100);
+
+  wpmDisplay.textContent = `WPM: ${isNaN(wpm) ? 0 : wpm}`;
+  accuracyDisplay.textContent = `Accuracy: ${isNaN(accuracy) ? 0 : accuracy}%`;
+}
+
 // Initial load
-loadPhrase();
+function loadPhrase() {
+  currentPhrase = getLongPhrase();
+  renderPhrase(currentPhrase);
+  typingArea.value = "";
+  typingArea.disabled = false;
+  wpmDisplay.textContent = "WPM: 0";
+  accuracyDisplay.textContent = "Accuracy: 0%";
+  startTime = null;
+  clearInterval(timer);
+  startTimer();
+}
