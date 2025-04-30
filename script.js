@@ -1,29 +1,33 @@
 const phrases = [
-  "Patient presents with acute abdominal pain.",
-  "History of hypertension and type 2 diabetes.",
-  "No known drug allergies.",
-  "Vitals stable, afebrile.",
-  "Plan: CBC, electrolytes, and ECG ordered.",
-  "Chief complaint: chest pain radiating to the left arm.",
-  "The patient is alert and oriented to person, place, and time.",
-  "Discharged in stable condition with follow-up in 1 week.",
-  "Past surgical history: laparoscopic cholecystectomy.",
-  "Administered 500mL normal saline IV."
+  "c/o SOB x2 days, no fever.",
+  "PMHx: HTN, DM2, CKD stage 3.",
+  "Allergies: NKDA.",
+  "O/E: A&O x3, GCS 15.",
+  "Vitals: BP 130/80, HR 88, RR 16.",
+  "Plan: CBC, BMP, ECG stat.",
+  "Administered 1L NS IV bolus.",
+  "Pt denies CP, N/V, or dizziness.",
+  "Pt reports palpitations and fatigue.",
+  "ROS negative except as noted above.",
+  "Dx: UTI vs. pyelonephritis. Tx: PO ABX x7d."
 ];
-
-let currentPhrase = "";
-let startTime;
-
-const phraseBox = document.getElementById("phrase-box");
-const typingArea = document.getElementById("typing-area");
-const wpmDisplay = document.getElementById("wpm");
-const accuracyDisplay = document.getElementById("accuracy");
-const restartBtn = document.getElementById("restart");
 
 function getRandomPhrase() {
   return phrases[Math.floor(Math.random() * phrases.length)];
 }
 
+// Element references
+const typingArea = document.getElementById("typing-area");
+const phraseBox = document.getElementById("phrase-box");
+const wpmDisplay = document.getElementById("wpm");
+const accuracyDisplay = document.getElementById("accuracy");
+const restartBtn = document.getElementById("restart");
+
+let currentPhrase = "";
+let currentIndex = 0;
+let startTime = null;
+
+// Load and render a new phrase
 function loadPhrase() {
   currentPhrase = getRandomPhrase();
   renderPhrase(currentPhrase, "phrase-box");
@@ -33,6 +37,8 @@ function loadPhrase() {
   currentIndex = 0;
   startTime = null;
 }
+
+// Render each character in a span
 function renderPhrase(phrase, elementId) {
   const box = document.getElementById(elementId);
   box.innerHTML = "";
@@ -43,11 +49,13 @@ function renderPhrase(phrase, elementId) {
     box.appendChild(span);
   });
 }
+
+// Handle typing input
 typingArea.addEventListener("input", () => {
   if (!startTime) startTime = new Date();
 
   const typed = typingArea.value;
-  const elapsed = (new Date() - startTime) / 60000; // in minutes
+  const elapsed = (new Date() - startTime) / 60000;
   const wordsTyped = typed.trim().split(/\s+/).length;
   const wpm = Math.round(wordsTyped / elapsed);
 
@@ -71,22 +79,10 @@ typingArea.addEventListener("input", () => {
   accuracyDisplay.textContent = `Accuracy: ${isNaN(accuracy) ? 0 : accuracy}%`;
 });
 
-  const typed = typingArea.value;
-  const elapsed = (new Date() - startTime) / 1000 / 60; // minutes
-  const wordsTyped = typed.trim().split(/\s+/).length;
-  const wpm = Math.round(wordsTyped / elapsed);
-
-  const correctChars = typed.split("").filter((char, i) => char === currentPhrase[i]).length;
-  const accuracy = Math.round((correctChars / currentPhrase.length) * 100);
-
-  wpmDisplay.textContent = `WPM: ${isNaN(wpm) ? 0 : wpm}`;
-  accuracyDisplay.textContent = `Accuracy: ${isNaN(accuracy) ? 0 : accuracy}%`;
-});
-
+// Restart button
 restartBtn.addEventListener("click", loadPhrase);
 
-// Initial load
-loadPhrase();
+// Tab switching logic
 function showTab(tab) {
   const testTab = document.getElementById("test-mode");
   const lessonTab = document.getElementById("lesson-mode");
@@ -99,6 +95,13 @@ function showTab(tab) {
     lessonTab.classList.remove("hidden");
     testTab.classList.add("hidden");
   }
+
+  tabButtons.forEach((btn) => btn.classList.remove("active"));
+  document.querySelector(`.tab-button[onclick="showTab('${tab}')"]`).classList.add("active");
+}
+
+// Initial load
+loadPhrase();
 
   tabButtons.forEach((btn) => btn.classList.remove("active"));
   document.querySelector(`.tab-button[onclick="showTab('${tab}')"]`).classList.add("active");
