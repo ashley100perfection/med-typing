@@ -12,8 +12,9 @@ const phrases = [
   "Dx: UTI vs. pyelonephritis. Tx: PO ABX x7d."
 ];
 
-function getRandomPhrase() {
-  return phrases[Math.floor(Math.random() * phrases.length)];
+function getLongPhrase() {
+  const shuffled = phrases.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, 3).join(" "); // 3 phrases
 }
 
 // DOM elements
