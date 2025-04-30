@@ -85,13 +85,15 @@ function showTab(tab) {
   if (tab === "test") {
     testTab.classList.remove("hidden");
     lessonTab.classList.add("hidden");
-  } else {
+  } else if (tab === "lesson") {
     lessonTab.classList.remove("hidden");
     testTab.classList.add("hidden");
   }
 
   tabButtons.forEach((btn) => btn.classList.remove("active"));
-  document.querySelector(`.tab-button[onclick="showTab('${tab}')"]`).classList.add("active");
+  document
+    .querySelector(`.tab-button[onclick="showTab('${tab}')"]`)
+    .classList.add("active");
 }
 
 // Initial load
