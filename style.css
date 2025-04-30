@@ -69,3 +69,9 @@ footer {
 .hidden {
   display: none;
 }
+.letter-display span.correct {
+  color: green;
+}
+.letter-display span.incorrect {
+  color: red;
+}
