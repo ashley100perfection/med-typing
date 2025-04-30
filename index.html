@@ -1,27 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MedTypist - Medical Typing Practice</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MedTypist</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <div class="container">
     <h1>MedTypist</h1>
-    <p class="description">Practice your typing skills with real medical phrases and structured lessons.</p>
+    <p class="description">Type faster, think faster — for med students, by a med student.</p>
 
-    <!-- Tab Navigation -->
     <div class="tabs">
       <button class="tab-button active" onclick="showTab('test')">Typing Test</button>
       <button class="tab-button" onclick="showTab('lesson')">Lessons</button>
     </div>
 
-    <!-- Typing Test Mode -->
     <div id="test-mode" class="tab-content">
       <div id="phrase-box">Loading phrase...</div>
-      <textarea id="typing-area" placeholder="Start typing here..." rows="4"></textarea>
-
+      <textarea id="typing-area" placeholder="Start typing..." rows="4"></textarea>
       <div class="stats">
         <span id="wpm">WPM: 0</span>
         <span id="accuracy">Accuracy: 0%</span>
@@ -29,16 +26,11 @@
       </div>
     </div>
 
-    <!-- Lessons Mode -->
     <div id="lesson-mode" class="tab-content hidden">
-      <p class="description">Letter-by-letter typing practice coming soon!</p>
-      <!-- Placeholder for lesson content -->
-      <div id="lesson-box"></div>
+      <div id="lesson-box">Lesson coming soon...</div>
     </div>
 
-    <footer>
-      <p>&copy; 2024 MedTypist by Ashley. All rights reserved.</p>
-    </footer>
+    <footer><p>&copy; 2025 MedTypist by Ashley. All rights reserved.</p></footer>
   </div>
 
   <script src="script.js"></script>
