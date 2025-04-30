@@ -54,3 +54,19 @@ restartBtn.addEventListener("click", loadPhrase);
 
 // Initial load
 loadPhrase();
+function showTab(tab) {
+  const testTab = document.getElementById("test-mode");
+  const lessonTab = document.getElementById("lesson-mode");
+  const tabButtons = document.querySelectorAll(".tab-button");
+
+  if (tab === "test") {
+    testTab.classList.remove("hidden");
+    lessonTab.classList.add("hidden");
+  } else if (tab === "lesson") {
+    lessonTab.classList.remove("hidden");
+    testTab.classList.add("hidden");
+  }
+
+  tabButtons.forEach((btn) => btn.classList.remove("active"));
+  document.querySelector(`.tab-button[onclick="showTab('${tab}')"]`).classList.add("active");
+}
