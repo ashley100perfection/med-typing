@@ -26,17 +26,50 @@ function getRandomPhrase() {
 
 function loadPhrase() {
   currentPhrase = getRandomPhrase();
-  phraseBox.textContent = currentPhrase;
+  renderPhrase(currentPhrase, "phrase-box");
   typingArea.value = "";
   wpmDisplay.textContent = "WPM: 0";
   accuracyDisplay.textContent = "Accuracy: 0%";
+  currentIndex = 0;
   startTime = null;
 }
-
+function renderPhrase(phrase, elementId) {
+  const box = document.getElementById(elementId);
+  box.innerHTML = "";
+  phrase.split("").forEach((char, index) => {
+    const span = document.createElement("span");
+    span.textContent = char;
+    span.id = `${elementId}-char-${index}`;
+    box.appendChild(span);
+  });
+}
 typingArea.addEventListener("input", () => {
-  if (!startTime) {
-    startTime = new Date();
+  if (!startTime) startTime = new Date();
+
+  const typed = typingArea.value;
+  const elapsed = (new Date() - startTime) / 60000; // in minutes
+  const wordsTyped = typed.trim().split(/\s+/).length;
+  const wpm = Math.round(wordsTyped / elapsed);
+
+  let correctChars = 0;
+  for (let i = 0; i < currentPhrase.length; i++) {
+    const span = document.getElementById(`phrase-box-char-${i}`);
+    if (i < typed.length) {
+      if (typed[i] === currentPhrase[i]) {
+        span.className = "correct";
+        correctChars++;
+      } else {
+        span.className = "incorrect";
+      }
+    } else {
+      span.className = "";
+    }
   }
+
+  const accuracy = Math.round((correctChars / typed.length) * 100);
+  wpmDisplay.textContent = `WPM: ${isNaN(wpm) ? 0 : wpm}`;
+  accuracyDisplay.textContent = `Accuracy: ${isNaN(accuracy) ? 0 : accuracy}%`;
+});
 
   const typed = typingArea.value;
   const elapsed = (new Date() - startTime) / 1000 / 60; // minutes
