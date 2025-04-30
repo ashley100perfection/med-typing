@@ -16,7 +16,7 @@ function getRandomPhrase() {
   return phrases[Math.floor(Math.random() * phrases.length)];
 }
 
-// Element references
+// DOM elements
 const typingArea = document.getElementById("typing-area");
 const phraseBox = document.getElementById("phrase-box");
 const wpmDisplay = document.getElementById("wpm");
@@ -24,65 +24,59 @@ const accuracyDisplay = document.getElementById("accuracy");
 const restartBtn = document.getElementById("restart");
 
 let currentPhrase = "";
-let currentIndex = 0;
 let startTime = null;
 
-// Load and render a new phrase
-function loadPhrase() {
-  currentPhrase = getRandomPhrase();
-  renderPhrase(currentPhrase, "phrase-box");
-  typingArea.value = "";
-  wpmDisplay.textContent = "WPM: 0";
-  accuracyDisplay.textContent = "Accuracy: 0%";
-  currentIndex = 0;
-  startTime = null;
-}
-
-// Render each character in a span
-function renderPhrase(phrase, elementId) {
-  const box = document.getElementById(elementId);
-  box.innerHTML = "";
-  phrase.split("").forEach((char, index) => {
+function renderPhrase(phrase) {
+  phraseBox.innerHTML = "";
+  phrase.split("").forEach((char, i) => {
     const span = document.createElement("span");
     span.textContent = char;
-    span.id = `${elementId}-char-${index}`;
-    box.appendChild(span);
+    span.id = `char-${i}`;
+    phraseBox.appendChild(span);
   });
 }
 
-// Handle typing input
+function loadPhrase() {
+  currentPhrase = getRandomPhrase();
+  renderPhrase(currentPhrase);
+  typingArea.value = "";
+  wpmDisplay.textContent = "WPM: 0";
+  accuracyDisplay.textContent = "Accuracy: 0%";
+  startTime = null;
+}
+
 typingArea.addEventListener("input", () => {
-  if (!startTime) startTime = new Date();
-
   const typed = typingArea.value;
-  const elapsed = (new Date() - startTime) / 60000;
-  const wordsTyped = typed.trim().split(/\s+/).length;
-  const wpm = Math.round(wordsTyped / elapsed);
+  if (!startTime && typed.length > 0) {
+    startTime = new Date();
+  }
 
-  let correctChars = 0;
+  let correct = 0;
+
   for (let i = 0; i < currentPhrase.length; i++) {
-    const span = document.getElementById(`phrase-box-char-${i}`);
+    const charSpan = document.getElementById(`char-${i}`);
     if (i < typed.length) {
       if (typed[i] === currentPhrase[i]) {
-        span.className = "correct";
-        correctChars++;
+        charSpan.className = "correct";
+        correct++;
       } else {
-        span.className = "incorrect";
+        charSpan.className = "incorrect";
       }
     } else {
-      span.className = "";
+      charSpan.className = "";
     }
   }
 
-  const accuracy = Math.round((correctChars / typed.length) * 100);
+  const elapsedMin = (new Date() - startTime) / 60000;
+  const wpm = Math.round(typed.trim().split(/\s+/).length / elapsedMin);
+  const accuracy = Math.round((correct / typed.length) * 100);
+
   wpmDisplay.textContent = `WPM: ${isNaN(wpm) ? 0 : wpm}`;
   accuracyDisplay.textContent = `Accuracy: ${isNaN(accuracy) ? 0 : accuracy}%`;
 });
 
-// Restart button
 restartBtn.addEventListener("click", loadPhrase);
 
-// Tab switching logic
 function showTab(tab) {
   const testTab = document.getElementById("test-mode");
   const lessonTab = document.getElementById("lesson-mode");
@@ -91,7 +85,7 @@ function showTab(tab) {
   if (tab === "test") {
     testTab.classList.remove("hidden");
     lessonTab.classList.add("hidden");
-  } else if (tab === "lesson") {
+  } else {
     lessonTab.classList.remove("hidden");
     testTab.classList.add("hidden");
   }
@@ -102,7 +96,3 @@ function showTab(tab) {
 
 // Initial load
 loadPhrase();
-
-  tabButtons.forEach((btn) => btn.classList.remove("active"));
-  document.querySelector(`.tab-button[onclick="showTab('${tab}')"]`).classList.add("active");
-}
